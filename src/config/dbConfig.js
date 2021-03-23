@@ -1,6 +1,11 @@
 import dotenv from 'dotenv';
+import * as pgStringParser from 'pg-connection-string';
 
 dotenv.config();
+
+const herokuData = process.env.DATABASE_URL
+  ? pgStringParser.parse(process.env.DATABASE_URL)
+  : {};
 
 const env = {
   app: {
@@ -10,12 +15,15 @@ const env = {
     secret: process.env.SECRET_KEY
   },
   db: {
-    database: process.env.DB_NAME,
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
+    database: herokuData.database || process.env.DB_NAME,
+    username: herokuData.user || process.env.DB_USERNAME,
+    password: herokuData.password || process.env.DB_PASSWORD,
+    host: herokuData.host || process.env.DB_HOST,
+    port: herokuData.port || process.env.DB_PORT,
     dialect: process.env.DB_DIALECT,
+    dialectOptions: {
+      ssl: { rejectUnauthorized: false }
+    },
     logging: false
   },
   imgur: {
@@ -32,5 +40,5 @@ const env = {
   use_env_variable: process.env.DATABASE_URL
 };
 
-export const { database, username, password, host, port, dialect, logging } = env.db;
+export const { database, username, password, host, port, dialect, dialectOptions, logging } = env.db;
 export default env;

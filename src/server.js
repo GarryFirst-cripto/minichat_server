@@ -18,6 +18,32 @@ import './config/passportConfig';
 const app = express();
 const io = socketIO();
 
+// const pg = require('pg');
+
+// pg.defaults.ssl = true;
+// pg.defaults.ssl = { rejectUnauthorized: false };
+
+// const params = {
+//   host: 'ec2-23-21-229-200.compute-1.amazonaws.com',
+//   user: 'jagjtitjqcuivh',
+//   password: '4c883b09c16429cf48afa54ab3f827ad6fbee219d7b18b9e7ace992267a332cf',
+//   database: 'd54qb4ths2r9a4',
+//   // sslmode: 'require'
+//   // ssl: false
+//   ssl: { rejectUnauthorized: false }
+// };
+
+// const client = new pg.Client(params);
+// client.connect()
+//   .then(() => {
+//     // eslint-disable-next-line no-console
+//     console.log('Connection has been established successfully.');
+//   })
+//   .catch(err => {
+//     // eslint-disable-next-line no-console
+//     console.error('Unable to connect to the database:', err);
+//   });
+
 sequelize
   .authenticate()
   .then(() => {
@@ -44,7 +70,7 @@ routes(app, io);
 
 app.get('*', (req, res) => {
   res.writeHead(302, { location: env.app.adress });
-  res.end();    
+  res.end();
 });
 
 app.use(errorHandlerMiddleware);
